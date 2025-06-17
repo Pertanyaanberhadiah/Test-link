@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unduh Aplikasi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+      background: #f4f4f4;
+    }
+    input, button {
+      padding: 12px;
+      width: 90%;
+      max-width: 500px;
+      margin: 10px auto;
+      display: block;
+      font-size: 1em;
+    }
+    .btn {
+      background: #d40000;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .btn:hover {
+      background: #b30000;
+    }
+    .btn-download {
+      background: #28a745;
+      color: white;
+      padding: 15px 25px;
+      font-size: 1.2em;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+    .link-box {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">Memuat...</div>
+
+  <script>
+    const app = document.getElementById("app");
+    const params = new URLSearchParams(window.location.search);
+    const linkParam = params.get("link");
+
+    if (linkParam) {
+      // Mode: pengguna kedua melihat tombol download
+      app.innerHTML = `
+        <h2>📥 Siap untuk Download</h2>
+        <a class="btn-download" href="${decodeURIComponent(linkParam)}" target="_blank">Klik untuk Download</a>
+      `;
+    } else {
+      // Mode: host menaruh link
+      app.innerHTML = `
+        <h2>🔗 Masukkan Link Download Anda</h2>
+        <input type="text" id="downloadLink" placeholder="https://example.com/file.apk" />
+        <button class="btn" onclick="buatLink()">🔒 Buat Link</button>
+        <div class="link-box" id="hasil"></div>
+      `;
+
+      window.buatLink = function () {
+        const link = document.getElementById("downloadLink").value.trim();
+        if (!link) {
+          alert("Masukkan link download terlebih dahulu!");
+          return;
+        }
+        const encoded = encodeURIComponent(link);
+        const hasilLink = `${location.origin}${location.pathname}?link=${encoded}`;
+        document.getElementById("hasil").innerHTML = `
+          Bagikan link ini ke pengguna kedua:<br>
+          <input type="text" value="${hasilLink}" readonly onclick="this.select()" />
+        `;
+      };
+    }
+  </script>
+</body>
+</html>
